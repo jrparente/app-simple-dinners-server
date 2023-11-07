@@ -6,7 +6,7 @@ import { verifyToken } from "./users.js";
 const router = express.Router();
 
 // Get a specific recipe by ID
-router.get("/recipe/:recipeID", async (req, res) => {
+router.get("/recipe/:recipeID", verifyToken, async (req, res) => {
   try {
     const recipe = await RecipeModel.findById(req.params.recipeID);
 

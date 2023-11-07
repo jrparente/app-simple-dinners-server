@@ -20,6 +20,20 @@ router.get("/:userID", verifyToken, async (req, res) => {
   }
 });
 
+// Get a single recipes
+router.get("recipe/:recipeID", verifyToken, async (req, res) => {
+  try {
+    const response = await RecipeModel.findById(req.params.recipeID);
+
+    res.json(response);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error ocurred while fetching this recipe." });
+  }
+});
+
 // Create new Recipe
 router.post("/", verifyToken, async (req, res) => {
   try {

@@ -5,6 +5,22 @@ import { verifyToken } from "./users.js";
 
 const router = express.Router();
 
+// Get a specific recipe by ID
+router.get("/recipe/:recipeID", async (req, res) => {
+  try {
+    const recipe = await RecipeModel.findById(req.params.recipeID);
+
+    if (!recipe) return res.json({ message: "Recipe doesn't exist!" });
+
+    res.json(recipe);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching this recipe." });
+  }
+});
+
 // Get all recipes
 router.get("/:userID", verifyToken, async (req, res) => {
   try {
@@ -17,20 +33,6 @@ router.get("/:userID", verifyToken, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "An error ocurred while fetching recipes." });
-  }
-});
-
-// Get a single recipes
-router.get("recipe/:recipeID", verifyToken, async (req, res) => {
-  try {
-    const response = await RecipeModel.findById(req.params.recipeID);
-
-    res.json(response);
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: "An error ocurred while fetching this recipe." });
   }
 });
 

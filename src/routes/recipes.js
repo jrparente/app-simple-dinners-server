@@ -54,7 +54,7 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 // Save a Recipe
-router.put("/", verifyToken, async (req, res) => {
+router.put("/save", verifyToken, async (req, res) => {
   try {
     const recipe = await RecipeModel.findById(req.body.recipeID);
     const user = await UserModel.findById(req.body.userID);
@@ -67,6 +67,27 @@ router.put("/", verifyToken, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "An error ocurred while saving a recipe." });
+  }
+});
+
+// Unsave a Recipe
+router.put("/unsave", verifyToken, async (req, res) => {
+  try {
+    const recipeID = req.body.recipeID;
+    const user = await UserModel.findById(req.body.userID);
+
+    user.savedRecipes = user.savedRecipes.filter(
+      (savedRecipe) => !savedRecipe._id.equals(recipeID)
+    );
+
+    await user.save();
+
+    res.json({ savedRecipes: user.savedRecipes });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error ocurred while unsaving a recipe." });
   }
 });
 
@@ -84,6 +105,57 @@ router.get("/savedRecipes/:userID", verifyToken, async (req, res) => {
     res
       .status(500)
       .json({ error: "An error ocurred while getting saved recipes." });
+  }
+});
+
+// Update a Recipe
+router.put("/", verifyToken, async (req, res) => {
+  try {
+    const recipeId = req.body.recipeId;
+
+    const updatedData = {
+      ...req.body,
+    };
+
+    const updatedRecipe = await RecipeModel.updateOne(
+      { _id: recipeId },
+      { $set: updatedData }
+    );
+
+    if (updatedRecipe.nModified === 0) {
+      return res.json({ message: "Recipe doesn't exist!" });
+    }
+
+    res.status(200).json({ message: "Recipe updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the recipe." });
+  }
+});
+
+// Delete a Recipe
+router.delete("/:recipeID", verifyToken, async (req, res) => {
+  try {
+    const recipeId = req.params.recipeID;
+
+    console.log("Attempting to delete recipe with ID:", recipeId);
+
+    const deletionResult = await RecipeModel.deleteOne({ _id: recipeId });
+
+    if (deletionResult.deletedCount === 0) {
+      console.log("Recipe not found.");
+      return res.status(404).json({ message: "Recipe not found." });
+    }
+
+    console.log("Recipe deleted successfully.");
+    res.status(200).json({ message: "Recipe deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the recipe." });
   }
 });
 

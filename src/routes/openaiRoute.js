@@ -11,7 +11,7 @@ router.post("/generateImage", async (req, res) => {
     const { prompt } = req.body;
 
     const openai = new OpenAI({
-      key: process.env.OPENAI_API_KEY,
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
     const response = await openai.images.generate({

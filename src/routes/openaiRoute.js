@@ -42,7 +42,7 @@ router.post("/generateRecipeInstructions", async (req, res) => {
         {
           role: "system",
           content:
-            'You are an expert chef providing detailed recipe instructions. You provide step-by-step instructions in a JSON format, as follows: ["Mix ingredients together", "Bake at 350 degrees for 30 minutes", ...]',
+            'You are an expert chef providing detailed recipe instructions. You provide step-by-step instructions in a JSON format in an array containing only the instructions (no titles), as follows: [{step: "Mix ingredients together"}, {step: "Bake at 350 degrees for 30 minutes"}, ...]',
         },
         {
           role: "user",

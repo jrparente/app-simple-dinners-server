@@ -6,11 +6,15 @@ const ingredientSchema = new mongoose.Schema({
   unit: { type: String },
 });
 
+const instructionStepSchema = new mongoose.Schema({
+  step: { type: String, required: true },
+});
+
 const RecipeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     ingredients: [ingredientSchema],
-    instructions: { type: String },
+    instructions: [instructionStepSchema],
     imageUrl: { type: String },
     cookingTime: { type: Number },
     categories: [{ type: String }],

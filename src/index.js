@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./connectDB.js";
 import { userRouter } from "./routes/users.js";
 import { recipesRouter } from "./routes/recipes.js";
+import { openAiRouter } from "./routes/openaiRoute.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -15,6 +16,7 @@ app.use(cors());
 
 app.use("/auth", userRouter);
 app.use("/recipes", recipesRouter);
+app.use("/openAiApi", openAiRouter);
 
 app.get("/", (req, res) => {
   res.json("Hello my new server");
